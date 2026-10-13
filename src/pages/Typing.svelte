@@ -1,7 +1,7 @@
 <script>
   
   // @ts-nocheck
-  import { onDestroy } from 'svelte';
+  import { onMount , onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router'
   import Button from '../lib/components/Button.svelte'
   import TextDisplay from '../lib/components/TextDisplay.svelte';
@@ -10,12 +10,26 @@
   import ProgressBar from '../lib/components/ProgressBar.svelte';
     
   
-  let text = 'Найголовніше по життю , не втрачати себе!'
+  let text = 'Завантаження...'
   let userInput = ''
   let seconds = 60
   let isRunning = false
   let timer = null
   let startTime = 60
+  let loading = true
+  let error = ''
+
+  onMount(async () => {
+    try {
+      const res = await fetch('http://127.0.0.1:3000/api/text')
+      const data = await res.json()
+      text = data.text
+      loading = false
+    } catch (e) {
+      error = 'Не вдалось завантажити текст'
+      loading = false
+    }
+  })
 
   $: progress = text.length > 0 ? Math.min(100, Math.round((userInput.length / text.length) * 100)) : 0
 
@@ -76,24 +90,30 @@
 
 <main>
 
-  <div class="header">
-     <Timer seconds={seconds}  isRunning={isRunning} />
-  </div>
+  {#if loading}
+     <p>Завантаження тексту...</p>
+  {:else if error} 
+     <p style="color: red;">{error}</p>  
+  {:else}
+     <div class="header">
+        <Timer seconds={seconds}  isRunning={isRunning} />
+     </div>
 
-  <div class="content">
-    <TextDisplay {text} {userInput} />
+     <div class="content">
+        <TextDisplay {text} {userInput} />
 
-    <div class="input-wrapper">
-      <TypingInput value={userInput} onInput={handleInput} />
-    </div>
+        <div class="input-wrapper">
+           <TypingInput value={userInput} onInput={handleInput} />
+        </div>
 
-    <ProgressBar {progress} />
-  </div>
+        <ProgressBar {progress} />
+     </div>
   
 
-  <div class="footer">
-    <Button text="Завершити тест" onClick={finishTesting} />
-  </div>
+     <div class="footer">
+        <Button text="Завершити тест" onClick={finishTesting} />
+     </div>
+  {/if}
   
 </main>
 
