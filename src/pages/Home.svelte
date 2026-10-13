@@ -13,17 +13,17 @@
    <div class="side-bar left"></div>
    <div class="side-bar right"></div>
    <div class="lemons">🍋</div>
+   <div class="card">
+     <h1 class="logo">
+      {#each 'TypeTest'.split('') as letter, i}
+        <span style="animation-delay: {i * 0.08}s">{letter}</span>  
+      {/each}
+     </h1>
  
-   <h1 class="logo">
-    {#each 'TypeTest'.split('') as letter, i}
-      <span style="animation-delay: {i * 0.08}s">{letter}</span>  
-    {/each}
-   </h1>
+     <p>Тренажер швидкості друку</p>
  
-   <p>Тренажер швидкості друку</p>
- 
-   <Button text="Почати тест друку" onClick={startTest} />
- 
+     <Button text="Почати тест друку" onClick={startTest} />
+   </div>
  </main>
  
  <style>
@@ -37,6 +37,20 @@
      text-align: center;
      padding: 2rem;
      font-family: system-ui,  sans-serif;
+   }
+
+   .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 3rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
    }
 
    /*Лімон*/
