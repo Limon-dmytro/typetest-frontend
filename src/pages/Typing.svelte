@@ -3,6 +3,7 @@
   // @ts-nocheck
   import { onMount , onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router'
+  import { calculateResults } from '../lib/utils/results';
   import Button from '../lib/components/Button.svelte'
   import TextDisplay from '../lib/components/TextDisplay.svelte';
   import TypingInput from '../lib/components/TypingInput.svelte';
@@ -56,25 +57,8 @@
     }
   }
 
-  function calculateResults() {
-    const timeSpent = startTime - seconds
-    const minutes = timeSpent / 60 || 1 / 60
-
-    let correct = 0
-    for (let i = 0; i < userInput.length; i++) {
-      if (userInput[i] === text[i]) correct++
-    }
-
-    const errors = userInput.length - correct
-    const accuracy = userInput.length > 0
-       ? Math.round((correct / userInput.length) * 100)
-       : 0
-
-    // WPM
-    const wpm = Math.round((correct / 5) / minutes)   
-    return { wpm, accuracy, errors, time: timeSpent }
-  }
-
+  const results = calculateResults({ text , userInput , startTime , seconds })
+  
   function finishTesting() {
     clearInterval(timer)
     timer = null
